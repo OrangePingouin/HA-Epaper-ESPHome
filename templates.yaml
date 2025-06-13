@@ -1,0 +1,540 @@
+###### MESSAGE HEURE ######
+
+- sensor:
+    - name: Message_heure
+      unique_id: message_par_heure
+      icon: mdi:calendar-clock
+      state: >
+        {% set hour = now().hour %}
+        {% if 5 <= hour < 12 %}
+          Bonne journée !
+        {% elif 12 <= hour < 18 %}
+          Bonne après-midi !
+        {% elif 18 <= hour < 22 %}
+          Bonne soirée !
+        {% else %}
+          Bonne nuit ! 🌙
+        {% endif %}
+        
+        
+###### DATE FORMAT COURT ######
+- sensor:
+    - name: "date_court"
+      unique_id: date_court
+      icon: mdi:calendar-today
+      state: >
+        {% set days = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"]  %}
+        {{ days[now().weekday()] + ' ' + now().day | string }}
+        
+    - name: "date_mois"
+      unique_id: date_mois
+      icon: mdi:calendar-today
+      state: >
+        {% set months = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"] %}
+        {{ months[now().month-1]}}
+        
+        
+### ANNIVERSAIRES PROCHAINS ######
+### Dans mon calendrier, mes événements (issus d'un calendrier google) sont sous cette forme :
+### summary: Prénom Nom
+### description: "yyyy" (année de naissance)
+### location: null
+### start: "yyyy-mm-ddT00:00:00+02:00"
+### end: "yyyy-mm-ddT00:00:00+02:00"
+### eta: 0
+### all_day: true
+### icon: mdi:calendar
+### friendly_name: Prénom Nom
+##################################
+- sensor:
+    - name: "Anniversaire 0"
+      unique_id: anniversaire_0
+      state: >
+        {% set sensor_id = 'sensor.ical_anniversaires_14_jours_event_0' %}
+        {% set s = states(sensor_id) %}
+        {% if s in ['unavailable', 'unknown', '', None] %}
+          Aucun anniversaire
+        {% else %}
+          {% set start = state_attr(sensor_id, 'start') %}                # Extrait la date
+          {% set summary = state_attr(sensor_id, 'summary') %}            # Extrait le nom
+          {% set description = state_attr(sensor_id, 'description') %}    # Extrait l'année de naissance
+          {% set date_str = as_datetime(start).strftime('%d/%m') if start else '--/--' %}
+
+          {% if description is string and description | length == 4 and description | int(default=0) > 1900 %}
+            {% set birth_year = description | int %}
+            {% set current_year = now().year %}
+            {% set age = current_year - birth_year %}                     # Déduction de l'âge en fonction de l'année de naissance
+            {{ date_str ~ ' - ' ~ summary ~ ' (' ~ age ~ ')' }}           # Formatage de l'entité en "dd/mm - Prénom Nom (Age)
+          {% else %}
+            {{ date_str ~ ' - ' ~ summary }}
+          {% endif %}
+        {% endif %}
+
+    - name: "Anniversaire 1"
+      unique_id: anniversaire_1
+      state: >
+        {% set sensor_id = 'sensor.ical_anniversaires_14_jours_event_1' %}
+        {% set s = states(sensor_id) %}
+        {% if s in ['unavailable', 'unknown', '', None] %}
+          Aucun anniversaire
+        {% else %}
+          {% set start = state_attr(sensor_id, 'start') %}
+          {% set summary = state_attr(sensor_id, 'summary') %}
+          {% set description = state_attr(sensor_id, 'description') %}
+          {% set date_str = as_datetime(start).strftime('%d/%m') if start else '--/--' %}
+
+          {% if description is string and description | length == 4 and description | int(default=0) > 1900 %}
+            {% set birth_year = description | int %}
+            {% set current_year = now().year %}
+            {% set age = current_year - birth_year %}
+            {{ date_str ~ ' - ' ~ summary ~ ' (' ~ age ~ ')' }}
+          {% else %}
+            {{ date_str ~ ' - ' ~ summary }}
+          {% endif %}
+        {% endif %}
+        
+    - name: "Anniversaire 2"
+      unique_id: anniversaire_2
+      state: >
+        {% set sensor_id = 'sensor.ical_anniversaires_14_jours_event_2' %}
+        {% set s = states(sensor_id) %}
+        {% if s in ['unavailable', 'unknown', '', None] %}
+          Aucun anniversaire
+        {% else %}
+          {% set start = state_attr(sensor_id, 'start') %}
+          {% set summary = state_attr(sensor_id, 'summary') %}
+          {% set description = state_attr(sensor_id, 'description') %}
+          {% set date_str = as_datetime(start).strftime('%d/%m') if start else '--/--' %}
+
+          {% if description is string and description | length == 4 and description | int(default=0) > 1900 %}
+            {% set birth_year = description | int %}
+            {% set current_year = now().year %}
+            {% set age = current_year - birth_year %}
+            {{ date_str ~ ' - ' ~ summary ~ ' (' ~ age ~ ')' }}
+          {% else %}
+            {{ date_str ~ ' - ' ~ summary }}
+          {% endif %}
+        {% endif %}
+
+    - name: "Anniversaire 3"
+      unique_id: anniversaire_3
+      state: >
+        {% set sensor_id = 'sensor.ical_anniversaires_14_jours_event_3' %}
+        {% set s = states(sensor_id) %}
+        {% if s in ['unavailable', 'unknown', '', None] %}
+          Aucun anniversaire
+        {% else %}
+          {% set start = state_attr(sensor_id, 'start') %}
+          {% set summary = state_attr(sensor_id, 'summary') %}
+           {% set description = state_attr(sensor_id, 'description') %}
+          {% set date_str = as_datetime(start).strftime('%d/%m') if start else '--/--' %}
+
+          {% if description is string and description | length == 4 and description | int(default=0) > 1900 %}
+            {% set birth_year = description | int %}
+            {% set current_year = now().year %}
+            {% set age = current_year - birth_year %}
+            {{ date_str ~ ' - ' ~ summary ~ ' (' ~ age ~ ')' }}
+          {% else %}
+            {{ date_str ~ ' - ' ~ summary }}
+          {% endif %}
+        {% endif %}
+        
+    - name: "Anniversaire 4"
+      unique_id: anniversaire_4
+      state: >
+        {% set sensor_id = 'sensor.ical_anniversaires_14_jours_event_4' %}
+        {% set s = states(sensor_id) %}
+        {% if s in ['unavailable', 'unknown', '', None] %}
+          Aucun anniversaire
+        {% else %}
+          {% set start = state_attr(sensor_id, 'start') %}
+          {% set summary = state_attr(sensor_id, 'summary') %}
+          {% set description = state_attr(sensor_id, 'description') %}
+          {% set date_str = as_datetime(start).strftime('%d/%m') if start else '--/--' %}
+
+          {% if description is string and description | length == 4 and description | int(default=0) > 1900 %}
+            {% set birth_year = description | int %}
+            {% set current_year = now().year %}
+            {% set age = current_year - birth_year %}
+            {{ date_str ~ ' - ' ~ summary ~ ' (' ~ age ~ ')' }}
+          {% else %}
+            {{ date_str ~ ' - ' ~ summary }}
+          {% endif %}
+        {% endif %}
+
+
+     ###### FÊTE DU JOUR ######    
+- sensor:
+    - name: "Fête du jour"
+      unique_id: fete_du_jour
+      state: >
+          {% set saints = {
+            '01-01': 'Ste Marie',
+            '01-02': 'St Basile',
+            '01-03': 'Ste Geneviève',
+            '01-04': 'St Odilon',
+            '01-05': 'St Édouard',
+            '01-06': 'St Mélaine',
+            '01-07': 'St Raymond',
+            '01-08': 'St Lucien',
+            '01-09': 'Ste Alix',
+            '01-10': 'St Guillaume',
+            '01-11': 'St Paulin',
+            '01-12': 'Ste Tatiana',
+            '01-13': 'Ste Yvette',
+            '01-14': 'St Nina',
+            '01-15': 'St Rémi',
+            '01-16': 'St Marcel',
+            '01-17': 'St Antoine',
+            '01-18': 'Ste Prisca',
+            '01-19': 'St Marius',
+            '01-20': 'St Sébastien',
+            '01-21': 'Ste Agnès',
+            '01-22': 'St Vincent',
+            '01-23': 'St Barnard',
+            '01-24': 'St François de Sales',
+            '01-25': 'St Paul',
+            '01-26': 'Ste Paule',
+            '01-27': 'Ste Angèle',
+            '01-28': 'St Thomas d’Aquin',
+            '01-29': 'St Gildas',
+            '01-30': 'Ste Martine',
+            '01-31': 'Ste Marcelle',
+            '02-01': 'Ste Ella',
+            '02-02': 'St Théophane',
+            '02-03': 'St Blaise',
+            '02-04': 'St Véronique',
+            '02-05': 'Ste Agathe',
+            '02-06': 'St Gaston',
+            '02-07': 'St Eugène',
+            '02-08': 'Ste Jacqueline',
+            '02-09': 'St Apolline',
+            '02-10': 'Ste Arnaud',
+            '02-11': 'Ste Héloïse',
+            '02-12': 'St Félix',
+            '02-13': 'St Béatrice',
+            '02-14': 'St Valentin',
+            '02-15': 'St Claude',
+            '02-16': 'Ste Julienne',
+            '02-17': 'St Alexis',
+            '02-18': 'Ste Bernadette',
+            '02-19': 'St Gabin',
+            '02-20': 'Ste Aimée',
+            '02-21': 'St Pierre-Damien',
+            '02-22': 'Ste Isabelle',
+            '02-23': 'St Lazare',
+            '02-24': 'St Modeste',
+            '02-25': 'St Roméo',
+            '02-26': 'St Nestor',
+            '02-27': 'St Honorine',
+            '02-28': 'St Romain',
+            '02-29': 'St Auguste',
+            '03-01': 'St Aubin',
+            '03-02': 'Ste Charles le Bon',
+            '03-03': 'St Guénolé',
+            '03-04': 'St Casimir',
+            '03-05': 'St Olive',
+            '03-06': 'St Colette',
+            '03-07': 'Ste Félicité',
+            '03-08': 'St Jean de Dieu',
+            '03-09': 'Ste Françoise Romaine',
+            '03-10': 'St Vivien',
+            '03-11': 'Ste Rosine',
+            '03-12': 'Ste Justine',
+            '03-13': 'St Rodrigue',
+            '03-14': 'Ste Mathilde',
+            '03-15': 'Ste Louise',
+            '03-16': 'St Bénédicte',
+            '03-17': 'St Patrice',
+            '03-18': 'St Cyrille',
+            '03-19': 'St Joseph',
+            '03-20': 'St Herbert',
+            '03-21': 'Ste Clémence',
+            '03-22': 'Ste Léa',
+            '03-23': 'St Victorien',
+            '03-24': 'Ste Catherine de Suède',
+            '03-25': 'St Humbert',
+            '03-26': 'St Larissa',
+            '03-27': 'St Habib',
+            '03-28': 'St Gontran',
+            '03-29': 'Ste Gwladys',
+            '03-30': 'St Amédée',
+            '03-31': 'St Benjamin',
+            '04-01': 'St Hugues',
+            '04-02': 'St Sandrine',
+            '04-03': 'St Richard',
+            '04-04': 'St Isidore',
+            '04-05': 'Ste Irène',
+            '04-06': 'St Marcellin',
+            '04-07': 'St Jean-Baptiste',
+            '04-08': 'Ste Julie',
+            '04-09': 'St Gauthier',
+            '04-10': 'St Fulbert',
+            '04-11': 'St Stanislas',
+            '04-12': 'St Jules',
+            '04-13': 'Ste Ida',
+            '04-14': 'St Maxime',
+            '04-15': 'St Paterne',
+            '04-16': 'St Benoît-Joseph',
+            '04-17': 'Ste Anicet',
+            '04-18': 'St Parfait',
+            '04-19': 'Ste Emma',
+            '04-20': 'Ste Odette',
+            '04-21': 'St Anselme',
+            '04-22': 'St Alexandre',
+            '04-23': 'St Georges',
+            '04-24': 'St Fidèle',
+            '04-25': 'St Marc',
+            '04-26': 'Ste Alida',
+            '04-27': 'Ste Zita',
+            '04-28': 'Ste Valérie',
+            '04-29': 'Ste Catherine de Sienne',
+            '04-30': 'St Robert',
+            '05-01': 'St Jérémie',
+            '05-02': 'St Boris',
+            '05-03': 'St Philippe et St Jacques',
+            '05-04': 'St Sylvain',
+            '05-05': 'St Judith',
+            '05-06': 'St Prudence',
+            '05-07': 'Ste Gisèle',
+            '05-08': 'St Désiré',
+            '05-09': 'St Pacôme',
+            '05-10': 'St Solange',
+            '05-11': 'St Estelle',
+            '05-12': 'St Achille',
+            '05-13': 'Ste Rolande',
+            '05-14': 'St Matthias',
+            '05-15': 'Ste Denise',
+            '05-16': 'St Honoré',
+            '05-17': 'St Pascal',
+            '05-18': 'St Éric',
+            '05-19': 'St Yves',
+            '05-20': 'St Bernardin',
+            '05-21': 'St Constantin',
+            '05-22': 'Ste Émilie',
+            '05-23': 'St Didier',
+            '05-24': 'St Donatien',
+            '05-25': 'St Sophie',
+            '05-26': 'St Bérenger',
+            '05-27': 'St Augustin',
+            '05-28': 'St Germain',
+            '05-29': 'St Aymard',
+            '05-30': 'St Ferdinand',
+            '05-31': 'Ste Perrine',
+            '06-01': 'St Justin',
+            '06-02': 'St Blandine',
+            '06-03': 'St Kévin',
+            '06-04': 'Ste Clotilde',
+            '06-05': 'St Igor',
+            '06-06': 'St Norbert',
+            '06-07': 'St Gilbert',
+            '06-08': 'St Médard',
+            '06-09': 'Ste Diane',
+            '06-10': 'St Landry',
+            '06-11': 'St Barnabé',
+            '06-12': 'St Guy',
+            '06-13': 'St Antoine',
+            '06-14': 'Ste Élisée',
+            '06-15': 'Ste Germaine',
+            '06-16': 'St Jean-François',
+            '06-17': 'St Hervé',
+            '06-18': 'St Léonce',
+            '06-19': 'St Romuald',
+            '06-20': 'St Silvère',
+            '06-21': 'St Rodolphe',
+            '06-22': 'St Alban',
+            '06-23': 'St Audrey',
+            '06-24': 'St Jean-Baptiste',
+            '06-25': 'St Prosper',
+            '06-26': 'St Anthelme',
+            '06-27': 'St Fernand',
+            '06-28': 'St Irénée',
+            '06-29': 'St Pierre et St Paul',
+            '06-30': 'St Martial',
+            '07-01': 'St Thierry',
+            '07-02': 'St Martinien',
+            '07-03': 'St Thomas',
+            '07-04': 'St Florent',
+            '07-05': 'St Antoine-Marie',
+            '07-06': 'Ste Mariette',
+            '07-07': 'St Raoul',
+            '07-08': 'St Thibaut',
+            '07-09': 'Ste Amandine',
+            '07-10': 'St Ulrich',
+            '07-11': 'St Benoît',
+            '07-12': 'St Olivier',
+            '07-13': 'St Henri et St Joël',
+            '07-14': 'St Camille',
+            '07-15': 'St Donald',
+            '07-16': 'Ste Carmen',
+            '07-17': 'Ste Charlotte',
+            '07-18': 'St Frédéric',
+            '07-19': 'St Arsène',
+            '07-20': 'Ste Marina',
+            '07-21': 'St Victor',
+            '07-22': 'Ste Marie-Madeleine',
+            '07-23': 'Ste Brigitte',
+            '07-24': 'Ste Christine',
+            '07-25': 'St Jacques',
+            '07-26': 'Ste Anne et St Joachim',
+            '07-27': 'Ste Nathalie',
+            '07-28': 'St Samson',
+            '07-29': 'Ste Marthe',
+            '07-30': 'St Juliette',
+            '07-31': 'St Ignace',
+            '08-01': 'St Alphonse',
+            '08-02': 'St Julien',
+            '08-03': 'Ste Lydie',
+            '08-04': 'St Jean-Marie',
+            '08-05': 'St Abel',
+            '08-06': 'St Octavien',
+            '08-07': 'St Gaëtan',
+            '08-08': 'St Dominique',
+            '08-09': 'St Amour',
+            '08-10': 'St Laurent',
+            '08-11': 'Ste Claire',
+            '08-12': 'Ste Clarisse et Ste Jeanne',
+            '08-13': 'St Hippolyte',
+            '08-14': 'St Evrard',
+            '08-15': 'Ste Marie',
+            '08-16': 'Ste Armel',
+            '08-17': 'St Hyacinthe',
+            '08-18': 'Ste Hélène',
+            '08-19': 'St Jean-Eudes',
+            '08-20': 'St Bernard',
+            '08-21': 'St Christophe',
+            '08-22': 'St Fabrice',
+            '08-23': 'Ste Rose',
+            '08-24': 'St Barthélemy',
+            '08-25': 'St Louis',
+            '08-26': 'Ste Natacha et St Adrien',
+            '08-27': 'Ste Monique',
+            '08-28': 'St Augustin',
+            '08-29': 'Ste Sabine',
+            '08-30': 'St Fiacre',
+            '08-31': 'St Aristide',
+            '09-01': 'St Gilles',
+            '09-02': 'Ste Ingrid',
+            '09-03': 'St Grégoire',
+            '09-04': 'Ste Rosalie',
+            '09-05': 'Ste Raïssa',
+            '09-06': 'St Bertrand',
+            '09-07': 'Ste Reine',
+            '09-08': 'St Adrien',
+            '09-09': 'St Alain',
+            '09-10': 'Ste Inès',
+            '09-11': 'St Théodore',
+            '09-12': 'Ste Apolline',
+            '09-13': 'St Aimé',
+            '09-14': 'Ste Clothilde',
+            '09-15': 'St Roland',
+            '09-16': 'Ste Edith',
+            '09-17': 'St Renaud',
+            '09-18': 'Ste Nadège et Ste Ariane',
+            '09-19': 'Ste Amélie',
+            '09-20': 'St Jean-Charles',
+            '09-21': 'St Matthieu',
+            '09-22': 'St Maurice',
+            '09-23': 'St Constant',
+            '09-24': 'St Anatole',
+            '09-25': 'St Herman',
+            '09-26': 'St Côme et St Damien',
+            '09-27': 'St Vincent',
+            '09-28': 'St Lucas',
+            '09-29': 'St Michel, St Gabriel et St Raphaël',
+            '09-30': 'St Jérôme',
+            '10-01': 'Ste Thérèse',
+            '10-02': 'St Léger',
+            '10-03': 'St Gérard',
+            '10-04': 'St François',
+            '10-05': 'Ste Fleur',
+            '10-06': 'St Bruno',
+            '10-07': 'St Serge',
+            '10-08': 'St Pélagie',
+            '10-09': 'St Denis',
+            '10-10': 'St Ghislain',
+            '10-11': 'St Firmin',
+            '10-12': 'St Wilfried',
+            '10-13': 'St Géraud',
+            '10-14': 'St Juste',
+            '10-15': 'Ste Aurélie',
+            '10-16': 'Ste Edwige',
+            '10-17': 'St Baudouin',
+            '10-18': 'St Luc',
+            '10-19': 'St René',
+            '10-20': 'Ste Adeline',
+            '10-21': 'Ste Céline',
+            '10-22': 'Ste Elodie',
+            '10-23': 'St Jean',
+            '10-24': 'St Florentin',
+            '10-25': 'St Crépin',
+            '10-26': 'St Dimitri',
+            '10-27': 'Ste Emeline',
+            '10-28': 'St Simon et St Jude',
+            '10-29': 'St Narcisse',
+            '10-30': 'St Bienvenue',
+            '10-31': 'St Quentin',
+            '11-01': 'Toussaint',
+            '11-02': 'Fête des morts',
+            '11-03': 'St Hubert',
+            '11-04': 'St Charles',
+            '11-05': 'Ste Sylvie',
+            '11-06': 'St Léonard',
+            '11-07': 'St Carine',
+            '11-08': 'St Geoffroy',
+            '11-09': 'St Théodore',
+            '11-10': 'St Léon',
+            '11-11': 'St Martin',
+            '11-12': 'St Christian',
+            '11-13': 'St Brice',
+            '11-14': 'Ste Sidoine',
+            '11-15': 'St Albert',
+            '11-16': 'Ste Marguerite',
+            '11-17': 'Ste Élisabeth',
+            '11-18': 'Ste Aude',
+            '11-19': 'St Tanguy',
+            '11-20': 'St Edmond',
+            '11-21': 'Présentation de la Vierge Marie',
+            '11-22': 'Ste Cécile',
+            '11-23': 'St Clément',
+            '11-24': 'St Flora',
+            '11-25': 'Ste Catherine d’Alexandrie',
+            '11-26': 'St Delphine',
+            '11-27': 'St Séverin',
+            '11-28': 'St Jacques de la Marche',
+            '11-29': 'St Saturnin',
+            '11-30': 'St André',
+            '12-01': 'Ste Florence',
+            '12-02': 'Ste Viviane',
+            '12-03': 'St Xavier',
+            '12-04': 'Ste Barbara',
+            '12-05': 'St Gérald',
+            '12-06': 'St Nicolas',
+            '12-07': 'St Ambroise',
+            '12-08': 'Fête de l Immaculée Conception',
+            '12-09': 'St Pierre',
+            '12-10': 'St Romaric',
+            '12-11': 'St Daniel',
+            '12-12': 'St Corentin',
+            '12-13': 'Ste Lucie',
+            '12-14': 'Ste Odile',
+            '12-15': 'Ste Ninon',
+            '12-16': 'St Adélaïde',
+            '12-17': 'St Gaël',
+            '12-18': 'St Gatien',
+            '12-19': 'St Urbain',
+            '12-20': 'St Théophile',
+            '12-21': 'St Pierre Canisius',
+            '12-22': 'Ste Françoise-Xavière',
+            '12-23': 'St Armand',
+            '12-24': 'St Adèle',
+            '12-25': 'St Emmanuel',
+            '12-26': 'St Étienne et St Stéphane',
+            '12-27': 'St Jean',
+            '12-28': 'St Innocents',
+            '12-29': 'St David',
+            '12-30': 'Ste Eugénie et St Roger',
+            '12-31': 'St Sylvestre'
+              } %}
+              {{ saints.get(now().strftime('%m-%d'), 'Fête inconnue') }}
+      icon: mdi:cake-variant
