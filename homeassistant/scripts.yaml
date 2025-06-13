@@ -1,48 +1,23 @@
 generation_resume_meteo_chatgpt_v4:
   sequence:
-  - variables:
-      ai_output:
-      forecast: '{{ states(''sensor.meteo_lcm'') }}'
-  - choose:
-    - conditions:
-      - condition: time
-        after: 00:00:00
-        before: '19:00:00'
-      sequence:
-      - action: conversation.process
-        metadata: {}
-        data:
-          text: 'Utilise ce texte pour faire un bulletin météo court (maximum 150
-            caractères). Ne parle pas de la fiabilité des prévisions.
-
-            Texte : {{ forecast }}'
-          agent_id: conversation.chatgpt
-        response_variable: ai_output
-    - conditions:
-      - condition: time
-        after: '19:00:00'
-        before: 00:00:00
-      sequence:
-      - variables:
-          condition_tomorrow: '{{ states(''sensor.condition_tomorrow'') }}'
-          temp_max_tomorrow: '{{ states(''sensor.temp_high_tomorrow'') | float | round(0)
-            }}'
-          temp_min_tomorrow: '{{ states(''sensor.temp_low_tomorrow'') | float | round(0)
-            }}'
-      - action: conversation.process
-        metadata: {}
-        data:
-          text: 'Voici les données météo pour demain : température minimale {{ temp_min_tomorrow
-            }}°C, maximale {{ temp_max_tomorrow }}°C, conditions {{ condition_tomorrow
-            }}. Rédige un résumé météo naturel et court (max 145 caractères) en parlant
-            de demain. Au delà de 30°C, tu peux considérer qu''il fera vriament chaud.'
-          agent_id: conversation.chatgpt
-        response_variable: ai_output
-  - action: input_text.set_value
-    metadata: {}
-    data:
-      value: '{{ ai_output.response.speech.plain.speech.replace(''"'','''')  }}'
-    target:
-      entity_id: input_text.chatgpt_meteo
+    - variables:
+        ai_output: null
+        forecast: "{{ states('sensor.meteo_toulouse_lcm') }}"
+    - action: conversation.process
+      metadata: {}
+      data:
+        text: >-
+          Utilise ce texte pour faire un bulletin météo court (maximum 150
+          caractères). Ne parle pas de la fiabilité des prévisions et ne précise
+          pas "Toulouse"   Texte : {{ forecast }}
+        agent_id: conversation.chatgpt
+      response_variable: ai_output
+    - action: input_text.set_value
+      metadata: {}
+      data:
+        value: "{{ ai_output.response.speech.plain.speech.replace('\"','')  }}"
+      target:
+        entity_id: input_text.chatgpt_meteo
   alias: Génération résumé météo ChatGPT_V4
-  description: ''
+  description: ""
+
