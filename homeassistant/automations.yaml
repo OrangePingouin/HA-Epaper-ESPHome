@@ -1,0 +1,76 @@
+- id: 'insérer nom unique'
+  alias: Exécution script météo à heures fixes
+  description: ''
+  triggers:
+  - trigger: time
+    at: 00:00:00
+  - trigger: time
+    at: 05:00:00
+  - trigger: time
+    at: 08:00:00
+  - trigger: time
+    at: '12:00:00'
+  - trigger: time
+    at: '19:00:00'
+  - trigger: time
+    at: '22:00:00'
+  conditions: []
+  actions:
+  - action: script.turn_on
+    metadata: {}
+    data: {}
+    target:
+      entity_id:
+      - script.generation_resume_meteo_chatgpt_v4
+  mode: single
+- id: ' insérer nom unique'
+  alias: '[EPAPER] MAJ écran ePaper si trajet boulot évolue'
+  description: ''
+  triggers:
+  - trigger: state
+    entity_id:
+    - sensor.maison_travail
+  conditions:
+  - condition: time
+    after: 06:00:00
+    before: '10:00:00'
+    weekday:
+    - mon
+    - tue
+    - wed
+    - thu
+    - fri
+  actions:
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 5
+      milliseconds: 0
+  - action: button.press
+    metadata: {}
+    data: {}
+    target:
+      entity_id: button.esphome_epaper_mettre_jour_l_cran
+  mode: single
+- id: 'insérer nom unique'
+  alias: '[EPAPER] MAJ écran ePaper si température varie de 1°C'
+  description: ''
+  triggers:
+  - entity_id:
+    - sensor.temperature_moyenne
+    - sensor.temperature_ext
+    trigger: state
+  conditions:
+  - condition: template
+    value_template: '{% set old = trigger.from_state.state | float(999) %} {% set
+      new = trigger.to_state.state | float(999) %} {{ (old != 999 and new != 999)
+      and ((new - old) | abs >= 1) }}
+
+      '
+  actions:
+  - delay:
+      seconds: 5
+  - target:
+      entity_id: button.esphome_epaper_mettre_jour_l_cran
+    action: button.press
+  mode: single
