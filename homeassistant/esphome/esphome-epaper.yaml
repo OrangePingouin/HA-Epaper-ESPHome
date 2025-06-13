@@ -222,7 +222,7 @@ sensor:
   - platform: homeassistant
     name: "Température extérieure"
     id: temp_ext
-    entity_id: sensor.temperature
+    entity_id: sensor.temperature_ext
 
   - platform: homeassistant
     name: "Température cave"
