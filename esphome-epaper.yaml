@@ -1,0 +1,482 @@
+esphome:
+  name: esphome-epaper
+  friendly_name: Epaper
+  min_version: 2025.5.0
+  name_add_mac_suffix: false
+  on_boot: 
+    - delay: 28s
+    - script.execute: update_screen
+
+esp32:
+  board: esp32dev
+  framework:
+    type: esp-idf
+
+# Enable logging
+logger:
+  level: DEBUG
+# Enable Home Assistant API
+api:
+
+# Allow Over-The-Air updates
+ota:
+- platform: esphome
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+captive_portal:
+
+script:
+  - id: update_screen
+    then:
+      - component.update: eink_display
+
+time:
+  - platform: sntp
+    id: sntp_time
+    on_time:
+      # 00:00
+      - seconds: 0
+        minutes: 5
+        hours: 0
+        then:
+          - script.execute: update_screen
+      # 08:00
+      - seconds: 0
+        minutes: 0
+        hours: 8
+        then:
+          - script.execute: update_screen
+      # 16:00
+      - seconds: 0
+        minutes: 0
+        hours: 16
+        then:
+          - script.execute: update_screen
+
+font:
+  ######### Raleway Regular 20 #################
+  - file: "fonts/Raleway-Regular.ttf"
+    id: ralewayregular20
+    size: 20
+    glyphs: &font-glyphs
+      ['!', '"', '%', '(', ')', '+', '=', ',', '-', '_', '.', ':', '°', ' ', '''', '/',
+      '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+      'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
+      'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
+      'é', 'à', 'è', 'ç', 'ù', 'î', 'ô', 'û', 'É', 'À', 'È', 'Ç', 'Ù', 'Î', 'Ô', 'Û']
+  ######### Raleway Regular 25 #################
+  - file: "fonts/Raleway-Regular.ttf"
+    id: ralewayregular25
+    size: 25
+    glyphs : *font-glyphs
+  ######### Raleway Regular 30 #################
+  - file: "fonts/Raleway-Regular.ttf"
+    id: ralewayregular30
+    size: 30
+    glyphs : *font-glyphs
+  ######### Raleway SemiBold 25 #################
+  - file: "fonts/Raleway-SemiBold.ttf"
+    id: ralewaysemibold25
+    size: 25
+    glyphs : *font-glyphs
+  ######### Raleway SemiBold 20 #################
+  - file: "fonts/Raleway-SemiBold.ttf"
+    id: ralewaysemibold20
+    size: 20
+    glyphs : *font-glyphs
+  ######### Raleway Regular 80 #################
+  - file: "fonts/Raleway-Regular.ttf"
+    id: ralewayregular80
+    size: 80
+    glyphs : *font-glyphs
+  ######### Raleway Extra Light Italic 80 #################
+  - file: "fonts/Raleway-ExtraLightItalic.ttf"
+    id: ralewayExtralightItalic80
+    size: 80
+    glyphs : *font-glyphs
+  ######### Raleway Light 18 #################
+  - file: "fonts/Raleway-Light.ttf"
+    id: ralewaylight18
+    size: 18
+    glyphs : *font-glyphs
+  ######### Raleway Light 20 #################
+  - file: "fonts/Raleway-Light.ttf"
+    id: ralewaylight20
+    size: 20
+    glyphs : *font-glyphs
+  ######### Raleway Extra Light Italic 20 #################
+  - file: "fonts/Raleway-ExtraLightItalic.ttf"
+    id: ralewayextralightitalic20
+    size: 20
+    glyphs : *font-glyphs
+  ######### Brittany signature 30 #################
+  - file: "fonts/BrittanySignature.ttf"
+    id: BrittanySignature30
+    size: 30
+    glyphs :
+            ['!', '"', '%', '(', ')', '+', '=', ',', '-', '_', '.', ':', ' ', '''', '/',
+      '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+      'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
+      'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
+      'é', 'à', 'è', 'ç', 'ù', 'î', 'ô', 'û', 'É', 'À', 'È', 'Ç', 'Ù', 'Î', 'Ô', 'Û']
+
+
+  ######### Material Design #################
+  - file: "fonts/materialdesignicons-webfont.ttf"
+    id: material50
+    size: 50
+    glyphs : &mdi_glyph
+      - "\U000F0F55" #HomeThermometerOutline
+      - "\U000F18D7" #SunThermometerOutline
+      - "\U000F07A9" #CarHatchback
+      - "\U000F00E9" #Cake
+      - "\U000F00EB" #CakeVariant
+      - "\U000F17F0" #CakeVariantOutline
+      - "\U000F00ED" #Calendar
+      - "\U000F0854" #BottleWine
+      
+
+
+spi:
+  clk_pin: 13
+  mosi_pin: 14
+
+button:
+  - platform: template
+    name: "Mettre à jour l'écran"
+    on_press:
+      then:
+        - component.update: eink_display
+
+text_sensor:
+  - platform: homeassistant
+    name: "Résumé Météo"
+    entity_id: input_text.chatgpt_meteo
+    id: chatgpt_meteo
+
+  - platform: homeassistant
+    name: "Date Courte"
+    id: date_court
+    entity_id: sensor.date_court
+
+  - platform: homeassistant
+    name: "Date Mois"
+    id: date_mois
+    entity_id: sensor.date_mois
+
+  - platform: homeassistant
+    name: "Temps Trajet Travail"
+    id: temps_trajet_travail
+    entity_id: sensor.maison_travail
+
+  - platform: homeassistant
+    name: "Fête du jour"
+    id: fete_du_jour
+    entity_id: sensor.fete_du_jour
+
+  - platform: homeassistant
+    name: "Anniversaire 0"
+    id: anniversaire_0
+    entity_id: sensor.anniversaire_0
+
+  - platform: homeassistant
+    name: "Anniversaire 1"
+    id: anniversaire_1
+    entity_id: sensor.anniversaire_1
+
+  - platform: homeassistant
+    name: "Anniversaire 2"
+    id: anniversaire_2
+    entity_id: sensor.anniversaire_2
+
+  - platform: homeassistant
+    name: "Anniversaire 3"
+    id: anniversaire_3
+    entity_id: sensor.anniversaire_3
+
+  - platform: homeassistant
+    name: "Anniversaire 4"
+    id: anniversaire_4
+    entity_id: sensor.anniversaire_4
+  
+  - platform: homeassistant
+    name: "Message horaire"
+    id: message_horaire
+    entity_id : sensor.message_heure
+
+  - platform: template
+    id: text_trajet_travail
+    name: "Temps Trajet Travail"
+    lambda: |-
+      return {"Temps de trajet travail :"};
+
+sensor:
+  - platform: homeassistant
+    name: "Température inérieure"
+    id: temp_int
+    entity_id: sensor.temperature_moyenne
+
+  - platform: homeassistant
+    name: "Température extérieure"
+    id: temp_ext
+    entity_id: sensor.temperature
+
+  - platform: homeassistant
+    name: "Température cave"
+    id: temp_cave
+    entity_id: sensor.capteur_cave_temperature
+
+
+display:
+  - platform: waveshare_epaper
+    id: eink_display
+    cs_pin: 15
+    dc_pin: 27
+    busy_pin: 25
+    reset_pin: 26
+    reset_duration: 2ms
+    model: 7.50in-bv3
+    rotation: 270°
+    update_interval: never
+    lambda: |-
+      // DATE JOUR
+      it.print(465, 10, id(ralewayExtralightItalic80), TextAlign::TOP_RIGHT, id(date_court).state.c_str());
+
+      // DATE MOIS
+      it.print(465, 85, id(ralewayregular80), TextAlign::TOP_RIGHT, id(date_mois).state.c_str());
+
+      // SAINT DU JOUR
+      it.print(40, 200, id(ralewaylight18), TextAlign::LEFT, id(fete_du_jour).state.c_str());
+
+      // LIGNE HORIZONTALE
+      it.filled_rectangle(30, 225, 420, 2);
+
+      // RÉSUMÉ MÉTÉO
+      auto raw_text = id(chatgpt_meteo).state;
+
+      // Filtrage ASCII + accents UTF-8 2 octets
+      std::string text;
+      size_t i = 0;
+      while (i < raw_text.length()) {
+        unsigned char c = raw_text[i];
+        if (c <= 0x7F) {
+          if (c >= 32) {
+            text += c;
+          }
+          i++;
+        } else if ((c & 0xE0) == 0xC0) {
+          if (i + 1 < raw_text.length()) {
+            text += raw_text[i];
+            text += raw_text[i+1];
+          }
+          i += 2;
+        } else {
+          i++;
+        }
+      }
+
+      // Variables pour découpage en lignes
+      std::vector<std::string> lines;
+      std::string current_line;
+      std::string word;
+      int max_width = 460;  // Largeur max en pixels (à ajuster selon ta config)
+      int y = 250;           // Position verticale de départ (exemple)
+
+      auto width_of_text = [&](const std::string& s) {
+        // Attention, ici pas de fonction native pour largeur texte dans lambda
+        // Souvent on approxime en nombre de caractères * largeur caractère
+        // Exemple simple : largeur = nombre caractères * 10 pixels (à ajuster)
+        return s.length() * 10;
+      };
+
+      // Découpage du texte par mots en lignes
+      for (auto c : text) {
+        if (c == ' ') {
+          std::string test_line = current_line + (current_line.empty() ? "" : " ") + word;
+          if (width_of_text(test_line) <= max_width) {
+            current_line = test_line;
+          } else {
+            lines.push_back(current_line);
+            current_line = word;
+          }
+          word.clear();
+        } else {
+          word += c;
+        }
+      }
+      if (!word.empty()) {
+        std::string test_line = current_line + (current_line.empty() ? "" : " ") + word;
+        if (width_of_text(test_line) <= max_width) {
+          current_line = test_line;
+        } else {
+          lines.push_back(current_line);
+          current_line = word;
+        }
+      }
+      if (!current_line.empty()) {
+        lines.push_back(current_line);
+      }
+
+      // Affichage ligne par ligne
+      for (auto& line : lines) {
+        it.print(240, y, id(ralewaylight20), TextAlign::TOP_CENTER, line.c_str());
+        y += 25;  // Décalage vertical entre lignes (à ajuster)
+      }
+
+      // LIGNE VERTICALE
+      it.rectangle(190, 375, 2, 290);
+
+      // TEMPÉRATURES
+      it.rectangle(30, 394, 147, 50);
+      it.print(145, 418, id(material50), TextAlign::CENTER, "\U000F0F55");
+      it.print(105, 403, id(ralewayregular25), TextAlign::RIGHT, 
+              str_sprintf("%.0f°C", id(temp_int).state).c_str());
+
+      it.rectangle(30, 492, 147, 50);
+      it.print(145, 516, id(material50), TextAlign::CENTER, "\U000F18D7");
+      it.print(105, 501, id(ralewayregular25), TextAlign::RIGHT, 
+              str_sprintf("%.0f°C", id(temp_ext).state).c_str());
+
+      it.rectangle(30, 590, 147, 50);
+      it.print(145, 614, id(material50), TextAlign::CENTER, "\U000F0854");
+      it.print(120, 599, id(ralewayregular25), TextAlign::RIGHT, 
+              str_sprintf("%.1f°C", id(temp_cave).state).c_str());
+
+      //AGENDA - Mes événements ont le format "dd/mm - Nom de la personne dont c'est l'anniversaire (âge)"
+      it.print(238, 380, id(material50), TextAlign::CENTER, "\U000F00EB");
+      it.print(355, 385, id(ralewaysemibold25), TextAlign::CENTER, "Anniversaires");
+
+      // Récupération des valeurs
+      auto a0 = id(anniversaire_0).state.c_str();
+      auto a1 = id(anniversaire_1).state.c_str();
+      auto a2 = id(anniversaire_2).state.c_str();
+      auto a3 = id(anniversaire_3).state.c_str();
+      auto a4 = id(anniversaire_4).state.c_str();
+
+      std::vector<std::string> annivs = {a0, a1, a2, a3, a4};
+
+      // Obtenir la date actuelle
+      auto now = id(sntp_time).now();  // adapte à ton ID si besoin
+      int day = now.day_of_month;
+      int month = now.month;
+
+      // Gérer "demain"
+      int tomorrow_day = day + 1;
+      int tomorrow_month = month;
+
+      // Jours dans chaque mois
+      int days_in_month[12] = {31,28,31,30,31,30,31,31,30,31,30,31};
+      if ((now.year % 4 == 0 && now.year % 100 != 0) || (now.year % 400 == 0)) {
+        days_in_month[1] = 29;
+      }
+      if (tomorrow_day > days_in_month[month - 1]) {
+        tomorrow_day = 1;
+        tomorrow_month++;
+        if (tomorrow_month > 12) {
+          tomorrow_month = 1;
+        }
+      }
+
+      // Formater today et tomorrow
+      char today_buf[6];
+      char tomorrow_buf[6];
+      snprintf(today_buf, sizeof(today_buf), "%02d/%02d", day, month);
+      snprintf(tomorrow_buf, sizeof(tomorrow_buf), "%02d/%02d", tomorrow_day, tomorrow_month);
+      std::string today_str = today_buf;
+      std::string tomorrow_str = tomorrow_buf;
+
+      // Affichage
+      if (strcmp(a0, "Aucun anniversaire") == 0 || strcmp(a0, "unavailable") == 0) {
+        it.printf(333, 472, id(ralewayregular20), TextAlign::CENTER, "Aucun à venir.");
+      } else {
+        int line_y = 420;
+        int center_x = 266;
+        int center_name_age_x = 370;
+
+        for (const auto &val : annivs) {
+          if (val != "Aucun anniversaire" && val != "unavailable") {
+            size_t sep = val.find(" - ");
+            if (sep != std::string::npos) {
+              std::string date = val.substr(0, sep);         // "13/06"
+              std::string name = val.substr(sep + 3);        // "Julie"
+
+              std::string label = (date == today_str) ? "auj." :
+                                  (date == tomorrow_str) ? "demain" : date;
+
+              it.print(center_x - 3, line_y, id(ralewaylight20), TextAlign::RIGHT, label.c_str());
+
+              // Séparer le nom et l'âge (si présent entre parenthèses)
+              size_t age_start = name.find(" (");
+              if (age_start != std::string::npos) {
+                std::string display_name = name.substr(0, age_start);
+                std::string age_text = name.substr(age_start);  // inclut " (30)"
+
+                // Largeur du nom
+                int x1, y1, name_width, name_height;
+                it.get_text_bounds(0, 0, display_name.c_str(), id(ralewaysemibold20), TextAlign::LEFT, &x1, &y1, &name_width, &name_height);
+
+                // Largeur de l’âge
+                int x2, y2, age_width, age_height;
+                it.get_text_bounds(0, 0, age_text.c_str(), id(ralewayextralightitalic20), TextAlign::LEFT, &x2, &y2, &age_width, &age_height);
+
+                // Total
+                int total_width = name_width + 4 + age_width;
+
+                // Point de départ pour centrer le tout
+                int start_x = center_name_age_x - (total_width / 2);
+
+                // Affiche le nom
+                it.print(start_x, line_y, id(ralewaysemibold20), TextAlign::LEFT, display_name.c_str());
+
+                // Affiche l’âge juste après
+                it.print(start_x + name_width + 4, line_y, id(ralewayextralightitalic20), TextAlign::LEFT, age_text.c_str());
+
+              } else {
+                // Aucun âge → centrer simplement le nom
+                int x1, y1, name_width, name_height;
+                it.get_text_bounds(0, 0, name.c_str(), id(ralewaysemibold20), TextAlign::LEFT, &x1, &y1, &name_width, &name_height);
+
+                int start_x = center_name_age_x - (name_width / 2);
+                it.print(start_x, line_y, id(ralewaysemibold20), TextAlign::LEFT, name.c_str());
+              }
+              line_y += 30;
+            }
+          }
+        }
+      }
+      ///MESSAGE HORAIRE
+      std::string raw_text_2 = id(message_horaire).state;
+      std::string text_2;
+      size_t j = 0;
+      while (j < raw_text_2.length()) {
+        unsigned char c = raw_text_2[j];
+        if (c <= 0x7F) {
+          if (c >= 32) {
+            text_2 += c;
+          }
+          j++;
+        } else if ((c & 0xE0) == 0xC0) {
+          if (j + 1 < raw_text_2.length()) {
+            text_2 += raw_text_2[j];
+            text_2 += raw_text_2[j + 1];
+          }
+          j += 2;
+        } else {
+          // Skip unsupported multibyte characters (e.g., 3+ byte sequences)
+          j++;
+        }
+      }
+
+      // Affichage du texte filtré
+      it.print(335, 640, id(BrittanySignature30), TextAlign::CENTER, text_2.c_str());
+
+
+
+      // TRAJET TRAVAIL
+      it.rectangle(30, 683, 420, 2);
+      it.print(240, 712, id(ralewaysemibold25), TextAlign::CENTER, id(text_trajet_travail).state.c_str());
+      it.print(200, 737, id(ralewayregular30), TextAlign::RIGHT, id(temps_trajet_travail).state.c_str());
+      it.print(205, 737, id(ralewayregular30), TextAlign::LEFT, " minutes");
